@@ -46,8 +46,8 @@ var albumPastry = {
 
 var createSongRow = function(songNumber, songName, songLength) {
      var template =
-        '<tr class="album-view-song-item">'
-      + '  <td class="song-item-number">' + songNumber + '</td>'
+        '<tr class="album-view-song-item">' //each line
+      + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>' //anything starting with 'data-' is a data attribute; where is it being stored?
       + '  <td class="song-item-title">' + songName + '</td>'
       + '  <td class="song-item-duration">' + songLength + '</td>'
       + '</tr>'
@@ -77,14 +77,33 @@ var setCurrentAlbum = function(album) {
    } // i+1 because song starts with song #1.
 };
 
+var songListContainer = document.getElementsByClassName('album-view-song-list')[0];
+var songRows = document.getElementsByClassName('album-view-song-item'); //gets array of album-view-song-items
+var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+
 window.onload = function() {
-  var albumsArray = [albumPastry, albumMarconi, albumPicasso];
+
+  setCurrentAlbum(albumPicasso);
+/*  var albumsArray = [albumPastry, albumMarconi, albumPicasso];
   i = 0;
-  albumImage.addEventListener('click', function(e){
+
+  albumImage.addEventListener('click', function(event){
     setCurrentAlbum(albumsArray[i]);
     i++;
     if (i == albumsArray.length){
       i = 0;
-    }
-  })
+      }
+    });
+*/
+    songListContainer.addEventListener('mouseover', function(event) {
+         if (event.target.parentElement.className === 'album-view-song-item') {
+             event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
+         }
+     });
+
+     for (i = 0; i < songRows.length; i++) {
+         songRows[i].addEventListener('mouseleave', function(event) {
+             this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
+         });
+     }
  };
