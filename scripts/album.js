@@ -28,6 +28,22 @@ var albumMarconi = {
     ]
 };
 
+var albumPastry = {
+  title: 'The Life of Sweets',
+  artist: 'Donut Man',
+  label: 'NomNom',
+  year: '2016',
+  albumArtUrl: 'assets/images/album_covers/01.png',
+  songs: [
+    {title: 'Sugar Donut', duration: '1:00'},
+    {title: 'Chocolate Donut', duration: '1:30'},
+    {title: 'Glazed Donut', duration: '2:00'},
+    {title: 'Plain Donut', duration: '2:30'}
+  ]
+};
+
+
+
 var createSongRow = function(songNumber, songName, songLength) {
      var template =
         '<tr class="album-view-song-item">'
@@ -40,13 +56,14 @@ var createSongRow = function(songNumber, songName, songLength) {
      return template;
  };
 
+var albumTitle = document.getElementsByClassName('album-view-title')[0];
+var albumArtist = document.getElementsByClassName('album-view-artist')[0];
+var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
+var albumImage = document.getElementsByClassName('album-cover-art')[0];
+var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+
 var setCurrentAlbum = function(album) {
 
-   var albumTitle = document.getElementsByClassName('album-view-title')[0];
-   var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-   var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-   var albumImage = document.getElementsByClassName('album-cover-art')[0];
-   var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
 
    albumTitle.firstChild.nodeValue = album.title; //albumTitle.firstChild = [object Text]; albumTitle = [object HTMLHeadingElement]
    albumArtist.firstChild.nodeValue = album.artist;
@@ -61,6 +78,13 @@ var setCurrentAlbum = function(album) {
 };
 
 window.onload = function() {
-  setCurrentAlbum(albumPicasso);
-    //setCurrentAlbum(albumMarconi);
+  var albumsArray = [albumPastry, albumMarconi, albumPicasso];
+  i = 0;
+  albumImage.addEventListener('click', function(e){
+    setCurrentAlbum(albumsArray[i]);
+    i++;
+    if (i == albumsArray.length){
+      i = 0;
+    }
+  })
  };
