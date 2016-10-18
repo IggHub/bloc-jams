@@ -89,9 +89,9 @@ var findParentByClassName = function(element, targetClass){
     return currentParent;
   }
 
-  if (findParentByClassName(element, targetClass) == null){
+  if (findParentByClassName(element, targetClass) == undefined){
     alert("No parent found");
-  } else if (!targetClass) {
+  } else if (!currentParent) {
     alert("No parent found with that class name");
   }
 };

@@ -4,6 +4,7 @@ body.album {
     background-attachment: fixed;
     background-position: center center;
     background-size: cover;
+    padding-bottom: 200px; /*recall player-bar has 200px. This is so when user scrolls all the way down, player won't obstruct song list!*/
 }
 
 .album-cover-art {
