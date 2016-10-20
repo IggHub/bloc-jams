@@ -55,27 +55,30 @@ var createSongRow = function(songNumber, songName, songLength) {
       + '</tr>'
       ;
 
-     return template;
+     return $(template);
  };
 
 //get corresponding album DOM
-var albumTitle = document.getElementsByClassName('album-view-title')[0];
-var albumArtist = document.getElementsByClassName('album-view-artist')[0];
-var albumReleaseInfo = document.getElementsByClassName('album-view-release-info')[0];
-var albumImage = document.getElementsByClassName('album-cover-art')[0];
-var albumSongList = document.getElementsByClassName('album-view-song-list')[0];
+var $albumTitle = $('.album-view-title'); //get .album-view-title (class) element.
+var $albumArtist = $('.album-view-artist');
+var $albumReleaseInfo = $('.album-view-release-info');
+var $albumImage = $('.album-cover-art');
+var $albumSongList = $('.album-view-song-list');
 
 //puts together album into HTML
-var setCurrentAlbum = function(album) {
-   albumTitle.firstChild.nodeValue = album.title; //albumTitle.firstChild = [object Text]; albumTitle = [object HTMLHeadingElement]
-   albumArtist.firstChild.nodeValue = album.artist;
-   albumReleaseInfo.firstChild.nodeValue = album.year + ' ' + album.label;
-   albumImage.setAttribute('src', album.albumArtUrl);
 
-   albumSongList.innerHTML = '';
+var setCurrentAlbum = function(album) {
+  $albumTitle.text(album.title); //jQuery's .text method replaces content of text nodes
+  $albumArtist.text(album.artist);//execute .text() method! Does text() action.
+  $albumReleaseInfo.text(album.year + ' ' + album.label); //.text() replaces content while .append() adds content!
+  $albumImage.attr('src', album.albumArtUrl);
+
+  $albumSongList.empty(); //run the jQuery function empty(); to empty it. equal to .innerHTML = '';
+
 
    for (var i = 0; i < album.songs.length; i++) {
-       albumSongList.innerHTML += createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
+      var $newRow = createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
+      $albumSongList.append($newRow);
    } // i+1 because song starts with song #1.
 };
 
@@ -85,6 +88,7 @@ var findParentByClassName = function(element, targetClass){
    //returns element's parent
     while(currentParent.className != targetClass && currentParent.className !== null){ //currentParent(current element's parent does not equal to targetClass (its parent is not itself), and it HAS at least a parent element (not null)) This loop goes up until hitting the right target parent! BRILLIANT!
         currentParent = currentParent.parentELement; // currentParent (element's parent) is now element's parent's parent
+
     }
     return currentParent;
   }
