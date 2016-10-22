@@ -180,6 +180,20 @@ var previousSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
+var togglePlayFromPlayerBar = function(){
+  var $currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
+
+  if (currentSoundFile.isPaused()){
+    $currentlyPlayingCell.html(pauseButtonTemplate); //changes the number on row from playing to pause
+    $(this).html(playerBarPauseButton);
+    currentSoundFile.pause();
+  } else if (currentSoundFile){
+    $currentlyPlayingCell.html(playButtonTemplate);
+    $(this).html(playerBarPlayButton);
+    currentSoundFile.pause();
+  }
+};
+
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
 var playerBarPlayButton = '<span class="ion-play"></span>';
@@ -193,9 +207,11 @@ var currentVolume = 80;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $playerBarPlayPause = $('.main-controls .play-pause');
 
 $(document).ready(function() { //when doc is ready, these happen:
     setCurrentAlbum(albumPicasso); //sets default album
     $previousButton.click(previousSong); //previousButton (icon), when clicked (event Listener), does a previousSong (function)
     $nextButton.click(nextSong);
+    $playerBarPlayPause.click(togglePlayFromPlayerBar);
 });
