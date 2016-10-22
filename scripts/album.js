@@ -25,11 +25,17 @@ var createSongRow = function(songNumber, songName, songLength) { //writes song r
             setSong(songNumber);
             currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
             updatePlayerBarSong(); //invokes updatePlayerBarSong function; changes displayed song, toggles play/pause button
+            currentSoundFile.play();
         } else if (currentlyPlayingSongNumber === songNumber) { //when the song clicked is the song playing
-            $(this).html(playButtonTemplate);
-            $('.main-controls .play-pause').html(playerBarPlayButton);
-            currentlyPlayingSongNumber = null;
-            currentSongFromAlbum = null;
+            if (currentSoundFile.isPaused()){
+              currentSoundFile.play();
+              $('.main-controls .play-pause').html(playerBarPauseButton);
+              $(this).html(pauseButtonTemplate);
+            } else {
+              currentSoundFile.pause();
+              $('.main-controls .play-pause').html(playerBarPlayButton);
+              $(this).html(playButtonTemplate);
+            }
         }
     };
 
@@ -58,8 +64,24 @@ var createSongRow = function(songNumber, songName, songLength) { //writes song r
 
 //behind dynamic property of currentlyPlayingSongNumber and currentSongFromAlbum
 var setSong = function(songNumber) {
+  if (currentSoundFile) { //if there is a song playing
+    currentSoundFile.stop();
+  }
     currentlyPlayingSongNumber = parseInt(songNumber);
-    currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+    currentSongFromAlbum = currentAlbum.songs[songNumber - 1]; //subtracts one because it is an array
+    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
+      formats: ['mp3'], //formats, preload, all that is part of buzz's settings.
+      preload: true
+    });
+//currentSongFromAlbum.audioUrl returns an object
+
+  setVolume(currentVolume);
+};
+
+var setVolume = function(volume){
+  if (currentSoundFile){//if currently a song is playing
+      currentSoundFile.setVolume(volume);
+  }
 };
 
 var setCurrentAlbum = function(album) { //sets current album info: cover, artist, title, and event appends the song rows using createSongRow. This function is the "mother" function
@@ -113,6 +135,7 @@ var nextSong = function() { //next Song action
     }
 
     setSong(currentSongIndex + 1);
+    currentSoundFile.play();
     currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
 
     $('.currently-playing .song-name').text(currentSongFromAlbum.name);
@@ -141,6 +164,7 @@ var previousSong = function() {
     }
 
     setSong(currentSongIndex + 1);
+    currentSoundFile.play();
     currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
 
     $('.currently-playing .song-name').text(currentSongFromAlbum.name);
@@ -161,9 +185,11 @@ var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause">
 var playerBarPlayButton = '<span class="ion-play"></span>';
 var playerBarPauseButton = '<span class="ion-pause"></span>';
 
-var currentAlbum = null;
-var currentlyPlayingSongNumber = null;
-var currentSongFromAlbum = null;
+var currentAlbum = null; //shows which album is playing
+var currentlyPlayingSongNumber = null; //show what song number is playing (if nothing is playing = null)
+var currentSoundFile = null; //shows which sound file is the song that is playing
+var currentSongFromAlbum = null; //shows which song is playing
+var currentVolume = 80;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
