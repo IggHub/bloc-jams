@@ -1,8 +1,8 @@
-var getSongNumberCell = function(number) {
+var getSongNumberCell = function(number) { // 8-dates data-song-number
     return $('.song-item-number[data-song-number="' + number + '"]');
 };
 
-var createSongRow = function(songNumber, songName, songLength) {
+var createSongRow = function(songNumber, songName, songLength) { //writes song row
     var template =
         '<tr class="album-view-song-item">'
       + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>'
@@ -13,19 +13,19 @@ var createSongRow = function(songNumber, songName, songLength) {
 
     var $row = $(template);
 
-    var clickHandler = function() {
-        var songNumber = parseInt($(this).attr('data-song-number'));
+    var clickHandler = function() { //when clicked
+        var songNumber = parseInt($(this).attr('data-song-number')); //convert data-song-number data type into integer
 
-        if (currentlyPlayingSongNumber !== null) {
+        if (currentlyPlayingSongNumber !== null) { //not null. Something is playing
             var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
-            currentlyPlayingCell.html(currentlyPlayingSongNumber);
+            currentlyPlayingCell.html(currentlyPlayingSongNumber); //writes down the song number
         }
-        if (currentlyPlayingSongNumber !== songNumber) {
+        if (currentlyPlayingSongNumber !== songNumber) { //when the song clicked is not the song playing
             $(this).html(pauseButtonTemplate);
             setSong(songNumber);
             currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
-            updatePlayerBarSong();
-        } else if (currentlyPlayingSongNumber === songNumber) {
+            updatePlayerBarSong(); //invokes updatePlayerBarSong function; changes displayed song, toggles play/pause button
+        } else if (currentlyPlayingSongNumber === songNumber) { //when the song clicked is the song playing
             $(this).html(playButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPlayButton);
             currentlyPlayingSongNumber = null;
@@ -51,51 +51,56 @@ var createSongRow = function(songNumber, songName, songLength) {
         }
     };
 
-    $row.find('.song-item-number').click(clickHandler);
-    $row.hover(onHover, offHover);
+    $row.find('.song-item-number').click(clickHandler); //recall $row = template. Find song-item-number class, applies clickHandler!
+    $row.hover(onHover, offHover); //applies hover eventListener
     return $row;
 };
 
+//behind dynamic property of currentlyPlayingSongNumber and currentSongFromAlbum
 var setSong = function(songNumber) {
     currentlyPlayingSongNumber = parseInt(songNumber);
     currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
 };
 
-var setCurrentAlbum = function(album) {
+var setCurrentAlbum = function(album) { //sets current album info: cover, artist, title, and event appends the song rows using createSongRow. This function is the "mother" function
     currentAlbum = album;
 
+//sets up page's relevant properties
     var $albumTitle = $('.album-view-title');
     var $albumArtist = $('.album-view-artist');
     var $albumReleaseInfo = $('.album-view-release-info');
     var $albumImage = $('.album-cover-art');
     var $albumSongList = $('.album-view-song-list');
 
+//adds text to relevant info
     $albumTitle.text(album.name);
     $albumArtist.text(album.artist);
     $albumReleaseInfo.text(album.year + ' ' + album.label);
     $albumImage.attr('src', album.albumArtUrl);
 
-    $albumSongList.empty();
+    $albumSongList.empty(); //starts fresh
 
+//appends album-view-song-list (recall $albumSongList is associated with .album-view-song-list)
     for (i = 0; i < album.songs.length; i++) {
-        var $newRow= createSongRow(i + 1, album.songs[i].name, album.songs[i].length);
+        var $newRow= createSongRow(i + 1, album.songs[i].name, album.songs[i].length); //applies createSongRow
         $albumSongList.append($newRow);
     }
 };
 
+//displays song data, updates play/pause button
 var updatePlayerBarSong = function() {
-    $('.currently-playing .song-name').text(currentSongFromAlbum.name);
-    $('.currently-playing .artist-name').text(currentAlbum.artist);
+    $('.currently-playing .song-name').text(currentSongFromAlbum.name); //currentSongFromAlbum is dynamic
+    $('.currently-playing .artist-name').text(currentAlbum.artist); //currentAlbum is dynamic
     $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.name + " - " + currentAlbum.artist);
 
     $('.main-controls .play-pause').html(playerBarPauseButton);
 };
 
-var trackIndex = function(album, song) {
+var trackIndex = function(album, song) { //gives song's index related to album object
     return album.songs.indexOf(song);
 };
 
-var nextSong = function() {
+var nextSong = function() { //next Song action
     var getLastSongNumber = function(index) {
         return index == 0 ? currentAlbum.songs.length : index;
     };
@@ -163,8 +168,8 @@ var currentSongFromAlbum = null;
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
 
-$(document).ready(function() {
-    setCurrentAlbum(albumPicasso);
-    $previousButton.click(previousSong);
+$(document).ready(function() { //when doc is ready, these happen:
+    setCurrentAlbum(albumPicasso); //sets default album
+    $previousButton.click(previousSong); //previousButton (icon), when clicked (event Listener), does a previousSong (function)
     $nextButton.click(nextSong);
 });
