@@ -6,13 +6,13 @@
 
 ## Features
 
-1. **Responsive**
+**1. Responsive**
 
 ![bloc-jams-responsive](/assets/images/bloc-jams-responsive.gif)
 
 Bloc Jams is created for all devises - it is mobile responsive!
 
-2. **Made for the web**
+**2. Made for the web**
 
 ![bloc-jams-music-player-demo](/assets/images/bloc-jams-music-player-demo.gif)
 
